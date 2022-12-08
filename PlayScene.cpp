@@ -22,7 +22,7 @@ void PlayScene::Initialize()
 {
     Instantiate<Ground>(this);
     Instantiate<TankBody>(this);
-    Instantiate<TankHead>(this);
+    //Instantiate<TankHead>(this);
 }
 
 //XV
