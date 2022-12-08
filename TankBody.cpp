@@ -44,7 +44,7 @@ void TankBody::Update()
     XMVECTOR vMove{ 0.0f,0.0f,0.1f,0.0f };
 
     //Y軸でtransform_.rotate_.y°回転させる行列
-    XMMATRIX MrotY = XMMatrixRotationY(XMConvertToRadians(transform_.position_.y));
+    XMMATRIX MrotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));//transform_.position_.にしてたわ
 
     //移動ベクトルを戦車の向いている方向に
     vMove = XMVector3TransformCoord(vMove, MrotY);	//ベクトルｖを行列ｍで変形   
@@ -55,17 +55,14 @@ void TankBody::Update()
     {
         vPos += vMove;
        
-        XMStoreFloat3(&transform_.position_,vMove );
+        XMStoreFloat3(&transform_.position_,vPos );
     }
-    
 
-
-
-
-
-
-  
-
+    if (Input::IsKey(DIK_S))
+    {
+        vPos -= vMove;
+        XMStoreFloat3(&transform_.position_, vPos);
+    }
    
 }
 
