@@ -3,6 +3,7 @@
 class TankBody : public GameObject
 {
     int hModel_;
+    int camType_;
 public:
     //コンストラクタ
     TankBody(GameObject* parent);

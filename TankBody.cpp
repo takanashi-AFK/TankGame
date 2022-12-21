@@ -2,10 +2,22 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Debug.h"
+#include "Engine/Camera.h"
+#include "Ground.h"
+
+
+enum
+{
+    CAM_TYPE_FIXED,
+    CAM_TYPE_TPS_NO_ROT,
+    CAM_TYPE_TPS,
+    CAM_TYPE_FPS,
+    CAM_TYPE_MAX
+};
 
 //コンストラクタ
 TankBody::TankBody(GameObject* parent)
-    :GameObject(parent, "TankBody"), hModel_(-1)
+    :GameObject(parent, "TankBody"), hModel_(-1),camType_(0)
 {
 }
 
@@ -63,7 +75,38 @@ void TankBody::Update()
         vPos -= vMove;
         XMStoreFloat3(&transform_.position_, vPos);
     }
-   
+    Camera::SetTarget(transform_.position_);
+    XMVECTOR vCam = { 0,5,-10,0 };
+    vCam = XMVector3TransformCoord(vCam, MrotY);
+    XMFLOAT3 camPos;
+    XMStoreFloat3(&camPos, vPos + vCam);
+    Camera::SetPosition(camPos);
+
+    /*XMFLOAT3 camPos = transform_.position_;
+    camPos.y += 5;
+    camPos.z -= 10;
+    Camera::SetPosition(camPos);*/
+
+
+    if (Input::IsKeyDown(DIK_Z))
+    {
+        //camera切り替えキーを配置
+    }
+
+    Ground* pStage = (Ground*)FindObject("Ground");    //ステージオブジェクトを探す
+    int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
+
+    RayCastData data;
+    data.start = transform_.position_;   //レイの発射位置
+    data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+    Model::RayCast(hGroundModel, &data); //レイを発射
+
+  
+
+    if (data.hit == true)
+    {
+        transform_.position_.y -= data.dist;
+    }
 }
 
 //描画
