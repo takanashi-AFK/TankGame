@@ -97,7 +97,8 @@ void TankBody::Update()
     int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
 
     RayCastData data;
-    data.start = transform_.position_;   //レイの発射位置
+    data.start = transform_.position_;//レイの発射位置
+    data.start.y = 0;
     data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
     Model::RayCast(hGroundModel, &data); //レイを発射
 

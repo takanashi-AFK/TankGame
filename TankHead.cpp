@@ -1,4 +1,5 @@
 #include "TankHead.h"
+#include "Bullet.h"
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 
@@ -23,7 +24,19 @@ void TankHead::Initialize()
 //çXêV
 void TankHead::Update()
 {
+    if (Input::IsKey(DIK_LEFT))
+    {
+        transform_.rotate_.y -= 2;
+    }
+    if (Input::IsKey(DIK_RIGHT))
+    {
+        transform_.rotate_.y += 2;
+    }
 
+    if (Input::IsKey(DIK_SPACE))
+    {
+        Instantiate <Bullet>
+    }
 }
 
 //ï`âÊ
