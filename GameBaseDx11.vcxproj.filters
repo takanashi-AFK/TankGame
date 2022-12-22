@@ -93,7 +93,7 @@
     <ClCompile Include="TankBody.cpp" />
     <ClCompile Include="TankHead.cpp" />
     <ClCompile Include="Ground.cpp" />
-    <ClCompile Include="..\TankGame_sample\Bullet.cpp" />
+    <ClCompile Include="Bullet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -163,7 +163,7 @@
     <ClInclude Include="TankBody.h" />
     <ClInclude Include="TankHead.h" />
     <ClInclude Include="Ground.h" />
-    <ClInclude Include="..\TankGame_sample\Bullet.h" />
+    <ClInclude Include="Bullet.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

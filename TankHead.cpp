@@ -33,9 +33,23 @@ void TankHead::Update()
         transform_.rotate_.y += 2;
     }
 
-    if (Input::IsKey(DIK_SPACE))
+    if (Input::IsKeyDown(DIK_SPACE))
     {
-        Instantiate <Bullet>
+
+        XMFLOAT3 cannonTop = Model::GetBonePosition(hModel_, "Top");
+        XMFLOAT3 cannonRoot = Model::GetBonePosition(hModel_, "Root");
+
+        XMVECTOR vTop = XMLoadFloat3(&cannonTop);
+        XMVECTOR vRoot = XMLoadFloat3(&cannonRoot);
+
+        XMVECTOR vMove = vTop - vRoot;
+        vMove = XMVector3Normalize(vMove);
+        vMove *= 0.5;
+        XMFLOAT3 Move;
+        XMStoreFloat3(&Move, vMove);
+
+     Bullet* pBullet = Instantiate <Bullet>(GetParent()->GetParent());
+     pBullet->SetPosition(cannonTop);
     }
 }
 

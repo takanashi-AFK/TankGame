@@ -1,15 +1,15 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include "Bullet.h"
-class TankHead : public GameObject
+class Bullet : public GameObject
 {
     int hModel_;
+    XMFLOAT3 move_;
 public:
     //コンストラクタ
-    TankHead(GameObject* parent);
+    Bullet(GameObject* parent);
 
     //デストラクタ
-    ~TankHead();
+    ~Bullet();
 
     //初期化
     void Initialize() override;
@@ -22,4 +22,6 @@ public:
 
     //開放
     void Release() override;
+
+    void SetMove(XMFLOAT3 move) { move_ = move; }
 };
