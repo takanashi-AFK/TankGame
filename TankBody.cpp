@@ -36,7 +36,7 @@ void TankBody::Initialize()
 //更新
 void TankBody::Update()
 {
- 
+
     if (Input::IsKey(DIK_A))
     {
         transform_.rotate_.y -= 0.5f;
@@ -46,7 +46,7 @@ void TankBody::Update()
     {
         transform_.rotate_.y += 0.5f;
     }
-    Debug::Log(transform_.rotate_.y,true);
+    Debug::Log(transform_.rotate_.y, true);
 
 
     //戦車の現在位置をベクトル型に変換
@@ -56,18 +56,18 @@ void TankBody::Update()
     XMVECTOR vMove{ 0.0f,0.0f,0.1f,0.0f };
 
     //Y軸でtransform_.rotate_.y°回転させる行列
-    XMMATRIX MrotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));//transform_.position_.にしてたわ
+    XMMATRIX MrotY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));//回転行列
 
     //移動ベクトルを戦車の向いている方向に
     vMove = XMVector3TransformCoord(vMove, MrotY);	//ベクトルｖを行列ｍで変形   
-   
+
     //現在位置をベクトル型からtransform_.position_.へ変換
 
     if (Input::IsKey(DIK_W))
     {
         vPos += vMove;
-       
-        XMStoreFloat3(&transform_.position_,vPos );
+
+        XMStoreFloat3(&transform_.position_, vPos);
     }
 
     if (Input::IsKey(DIK_S))
@@ -75,23 +75,60 @@ void TankBody::Update()
         vPos -= vMove;
         XMStoreFloat3(&transform_.position_, vPos);
     }
+
     Camera::SetTarget(transform_.position_);
     XMVECTOR vCam = { 0,5,-10,0 };
+
     vCam = XMVector3TransformCoord(vCam, MrotY);
     XMFLOAT3 camPos;
+
     XMStoreFloat3(&camPos, vPos + vCam);
     Camera::SetPosition(camPos);
 
-    /*XMFLOAT3 camPos = transform_.position_;
-    camPos.y += 5;
-    camPos.z -= 10;
-    Camera::SetPosition(camPos);*/
 
 
-    if (Input::IsKeyDown(DIK_Z))
+    if (Input::IsKeyDown(DIK_F))
     {
-        //camera切り替えキーを配置
+        if (camType_ < CAM_TYPE_FPS)CamType += 1;
+        else camType_ = CAM_TYPE_FIXED;
     }
+
+    //焦点の位置
+    XMFLOAT3 CamTarget = { 0,0,0 };
+    //一人称カメラの位置
+    XMFLOAT3 CamPosition = { 0,0,0 };
+    //３人称カメラの位置
+    XMVECTOR CamVector = { 0,5,-10,0 };
+    CamVector = XMVector3TransformCoord(CamVector, MrotY);
+
+    //視点種類
+    switch (camType_)
+    {
+    case CAM_TYPE_FIXED://定点カメラ(ステージ全体が映る)
+        CamTarget = XMFLOAT3(0, 0, -7);
+        CamPosition = XMFLOAT3(0, 45, -30);
+        break;
+    case CAM_TPS_NO_ROT://3人称視点(回転なし)
+        CamTarget = transform.position;
+        CamPosition = transform.position_;
+        CamPosition.y += 5;//tankより高さが５高い位置
+        CamPosition.z -= 10;//tankよりｚが１０遠い位置
+        break;
+    case CAM_TYPE_TPS://3人称視点(回転あり)
+        CamTarget = transform.position_;
+        XMStoreFloat3(&CamPosition, vPos + CamVector);
+        break;
+    case CAM_TYPE_FPS://一人称視点
+
+        XMStoreFloat3(&CamTarget, vPos + vMove);
+        XMStoreFloat3(&CamPosition, vPos);
+        break;
+    }
+    Camera::SetTarget(CamTarget);
+    Camera::SetPosition(CamPosition);
+    
+
+
 
     Ground* pStage = (Ground*)FindObject("Ground");    //ステージオブジェクトを探す
     int hGroundModel = pStage->GetModelHandle();    //モデル番号を取得
