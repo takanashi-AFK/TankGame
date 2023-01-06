@@ -32,6 +32,14 @@ void TankHead::Update()
     {
         transform_.rotate_.y += 2;
     }
+    if (Input::IsKey(DIK_UP))
+    {
+        transform_.rotate_.x -= 2;
+    }
+    if (Input::IsKey(DIK_DOWN))
+    {
+        transform_.rotate_.x += 2;
+    }
 
     if (Input::IsKeyDown(DIK_SPACE))
     {
@@ -50,6 +58,8 @@ void TankHead::Update()
 
      Bullet* pBullet = Instantiate <Bullet>(GetParent()->GetParent());
      pBullet->SetPosition(cannonTop);
+
+     pBullet -> SetMove(Move);
     }
 }
 
