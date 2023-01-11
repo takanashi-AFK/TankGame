@@ -31,6 +31,8 @@ void Bullet::Update()
     transform_.position_.x += move_.x;
     transform_.position_.y += move_.y;
     transform_.position_.z += move_.z;
+
+    move_.y -= 0.01f;
     if (transform_.position_.z > 75.0f)
     {
         KillMe();
